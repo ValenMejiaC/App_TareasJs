@@ -1,23 +1,25 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import InputTarea from './components/InputTarea';
+import ListaTareas from './components/ListaTareas';
 
 function App() {
+  const [tareas, setTareas] = useState([]);
+
+  const agregarTarea = (nuevaTarea) => {
+    setTareas([...tareas, nuevaTarea]);
+  };
+
+  const eliminarTarea = (index) => {
+    const nuevasTareas = tareas.filter((_, i) => i !== index);
+    setTareas(nuevasTareas);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>📝 Mi Lista de Tareas</h1>
+      <InputTarea agregarTarea={agregarTarea} />
+      <ListaTareas tareas={tareas} eliminarTarea={eliminarTarea} />
     </div>
   );
 }
