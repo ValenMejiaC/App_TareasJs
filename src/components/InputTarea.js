@@ -1,24 +1,33 @@
 import React, { useState } from 'react';
 
 function InputTarea({ agregarTarea }) {
-  const [tarea, setTarea] = useState("");
+  const [texto, setTexto] = useState('');
 
-  const manejarSubmit = (e) => {
-    e.preventDefault();
-    if (tarea.trim() === "") return;
-    agregarTarea(tarea);
-    setTarea("");
+  const handleChange = (event) => {
+    setTexto(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (texto.trim()) {
+      agregarTarea(texto);
+      setTexto('');
+    }
   };
 
   return (
-    <form onSubmit={manejarSubmit}>
+    <form className="input-tarea-form" onSubmit={handleSubmit}>
       <input
+        className="input-tarea-campo"
         type="text"
-        placeholder="Escribe una tarea..."
-        value={tarea}
-        onChange={(e) => setTarea(e.target.value)}
+        value={texto}
+        onChange={handleChange}
+        placeholder="Añadir nueva tarea..."
+        aria-label="Añadir nueva tarea"
       />
-      <button type="submit">Agregar</button>
+      <button className="input-tarea-boton" type="submit">
+        Añadir
+      </button>
     </form>
   );
 }

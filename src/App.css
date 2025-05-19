@@ -1,39 +1,434 @@
-.App {
+/* --- VARIABLES CSS Y ESTILOS GLOBALES --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+:root {
+  --color-primario: #6a11cb; /* Morado oscuro */
+  --color-primario-hover: #5e0fae;
+  --color-secundario: #2575fc; /* Azul vibrante */
+  --color-fondo: #f0f2f5; /* Un gris muy claro */
+  --color-superficie: #ffffff; /* Blanco para tarjetas */
+  --color-texto-principal: #333333;
+  --color-texto-secundario: #5f6368;
+  --color-texto-sobre-primario: #ffffff;
+  --color-borde: #e0e0e0;
+  --color-sombra: rgba(0, 0, 0, 0.1);
+  --color-completado: #28a745; /* Verde */
+  --color-error: #dc3545; /* Rojo */
+  --color-editar: #ffc107; /* Amarillo */
+
+  --fuente-principal: 'Poppins', sans-serif;
+  --radio-borde-sm: 4px;
+  --radio-borde-md: 8px;
+  --sombra-ligera: 0 2px 5px var(--color-sombra);
+  --sombra-media: 0 4px 10px var(--color-sombra);
+  --transicion-rapida: all 0.2s ease-in-out;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--fuente-principal);
+  background-color: var(--color-fondo);
+  color: var(--color-texto-principal);
+  line-height: 1.6;
+  padding: 20px; /* Evita que el contenido toque los bordes en pantallas pequeñas */
+  display: flex;
+  justify-content: center; /* Centra el app-container */
+  min-height: 100vh;
+}
+
+/* --- CONTENEDOR PRINCIPAL DE LA APP --- */
+.app-container {
+  background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-secundario) 100%);
+  padding: 30px;
+  border-radius: var(--radio-borde-md);
+  box-shadow: var(--sombra-media);
+  width: 100%;
+  max-width: 650px; /* Ancho máximo de la app */
+  margin-top: 30px; /* Espacio superior */
+  margin-bottom: 30px; /* Espacio inferior */
+}
+
+.app-header {
   text-align: center;
-  padding: 20px;
+  margin-bottom: 30px;
 }
 
-form {
-  margin-bottom: 20px;
+.app-header h1 {
+  color: var(--color-texto-sobre-primario);
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
-input {
-  padding: 10px;
-  width: 200px;
+.app-main {
+  background-color: var(--color-superficie);
+  padding: 25px;
+  border-radius: var(--radio-borde-md);
+  box-shadow: var(--sombra-ligera);
 }
 
-button {
-  padding: 10px;
-  margin-left: 10px;
+/* --- FORMULARIO DE INPUT DE TAREA --- */
+.input-tarea-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
 }
 
-ul {
+.input-tarea-campo {
+  flex-grow: 1;
+  padding: 12px 15px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-borde-sm);
+  font-size: 1rem;
+  font-family: var(--fuente-principal);
+  transition: var(--transicion-rapida);
+}
+
+.input-tarea-campo:focus {
+  outline: none;
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+}
+
+.input-tarea-boton {
+  padding: 12px 20px;
+  background-color: var(--color-primario);
+  color: var(--color-texto-sobre-primario);
+  border: none;
+  border-radius: var(--radio-borde-sm);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transicion-rapida);
+  white-space: nowrap; /* Evita que el texto del botón se rompa */
+}
+
+.input-tarea-boton:hover {
+  background-color: var(--color-primario-hover);
+  transform: translateY(-1px); /* Ligero efecto de elevación */
+}
+
+/* --- LISTA DE TAREAS --- */
+.lista-tareas-ul {
   list-style: none;
   padding: 0;
 }
 
-li {
-  background: #f4f4f4;
-  margin: 5px;
-  padding: 10px;
+.lista-vacia {
+  text-align: center;
+  color: var(--color-texto-secundario);
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: var(--radio-borde-sm);
+  border: 1px dashed var(--color-borde);
+}
+
+/* --- ÍTEM DE TAREA INDIVIDUAL --- */
+.tarea-item {
+  background-color: var(--color-superficie);
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: var(--radio-borde-sm);
+  border: 1px solid var(--color-borde);
+  display: flex; /* Usado para .tarea-modo-edicion y .tarea-modo-vista */
+  align-items: center; /* Alinea verticalmente el contenido de la tarea */
+  transition: var(--transicion-rapida);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.tarea-item:hover:not(.tarea-editando) {
+  border-color: #c0c0c0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.tarea-item.tarea-completada:not(.tarea-editando) {
+  background-color: #e9f7ef; /* Verde muy pálido */
+  border-left: 4px solid var(--color-completado);
+}
+
+.tarea-item.tarea-editando {
+  border-left: 4px solid var(--color-editar);
+  box-shadow: var(--sombra-ligera);
+}
+
+/* Modo Vista de la Tarea */
+.tarea-modo-vista {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  gap: 10px; /* Espacio entre contenido y acciones */
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  input {
-    width: 150px;
+.tarea-contenido {
+  display: flex;
+  align-items: center;
+  flex-grow: 1; /* Para que el texto ocupe el espacio disponible */
+  gap: 10px;
+  overflow: hidden; /* Para que el texto no se desborde */
+}
+
+/* Checkbox Personalizado */
+.tarea-checkbox { /* Ocultamos el checkbox original */
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.tarea-checkbox-label {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  padding-left: 5px; /* Espacio para el check custom */
+  user-select: none; /* Evita selección de texto al clickear */
+}
+
+.checkbox-custom {
+  position: relative;
+  top: 0px; /* Ajusta para alineación vertical con el texto */
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  display: inline-block;
+  transition: var(--transicion-rapida);
+}
+
+.tarea-checkbox:checked + .tarea-checkbox-label .checkbox-custom {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.checkbox-custom:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.tarea-checkbox:checked + .tarea-checkbox-label .checkbox-custom:after {
+  display: block;
+}
+
+.tarea-texto {
+  font-size: 1rem;
+  color: var(--color-texto-principal);
+  transition: var(--transicion-rapida);
+  word-break: break-word; /* Para que el texto largo no rompa el layout */
+  cursor: pointer; /* Indica que es clickeable */
+}
+
+.tarea-texto.texto-tachado {
+  text-decoration: line-through;
+  color: var(--color-texto-secundario);
+  opacity: 0.7;
+}
+
+.tarea-acciones-vista {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0; /* Evita que los botones se encojan */
+}
+
+/* Botones de Acción Comunes (Editar, Eliminar, Guardar, Cancelar) */
+.boton-accion {
+  padding: 7px 12px;
+  border: none;
+  border-radius: var(--radio-borde-sm);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transicion-rapida);
+  white-space: nowrap;
+}
+
+.boton-editar {
+  background-color: var(--color-editar);
+  color: var(--color-texto-principal);
+}
+.boton-editar:hover {
+  background-color: #e0a800;
+  transform: translateY(-1px);
+}
+
+.boton-eliminar {
+  background-color: var(--color-error);
+  color: var(--color-texto-sobre-primario);
+}
+.boton-eliminar:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Modo Edición de Tarea */
+.tarea-modo-edicion {
+  display: flex;
+  flex-direction: column; /* Input arriba, botones abajo en móvil */
+  width: 100%;
+  gap: 10px;
+}
+
+.tarea-input-edicion {
+  padding: 10px 12px;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-borde-sm);
+  font-size: 1rem;
+  font-family: var(--fuente-principal);
+  width: 100%;
+  transition: var(--transicion-rapida);
+}
+
+body {
+  /* Otros estilos que ya tengas */
+  background-image: url('./img/Fondo_App.jpg');
+  background-size: cover; /* Para que la imagen cubra todo el fondo */
+  background-repeat: no-repeat; /* Para evitar que la imagen se repita */
+  /* Opcional: para centrar la imagen */
+  background-position: center;
+}
+
+.tarea-input-edicion:focus {
+  outline: none;
+  border-color: var(--color-secundario);
+  box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+}
+
+.tarea-botones-edicion {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end; /* Alinea botones a la derecha */
+}
+
+.boton-guardar {
+  background-color: var(--color-completado);
+  color: var(--color-texto-sobre-primario);
+}
+.boton-guardar:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.boton-cancelar {
+  background-color: #f0f0f0;
+  color: var(--color-texto-secundario);
+  border: 1px solid #ddd;
+}
+.boton-cancelar:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-1px);
+}
+
+/* --- FOOTER --- */
+.app-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 15px;
+  font-size: 0.9rem;
+  color: var(--color-texto-sobre-primario);
+  opacity: 0.8;
+}
+
+/* --- MEDIA QUERIES PARA RESPONSIVIDAD --- */
+
+/* Tablets y móviles grandes (hasta 768px) */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .app-header h1 {
+    font-size: 2rem;
+  }
+  .app-main {
+    padding: 20px;
+  }
+  .input-tarea-form {
+    /* Puede mantenerse flex, o pasar a column si se prefiere */
+    /* flex-direction: column; */
+  }
+  .tarea-modo-vista {
+    /* Ya es flex, se adapta bien. Podrías hacer que los botones pasen abajo si hay poco espacio */
   }
 }
+
+/* Móviles pequeños (hasta 480px) */
+@media (max-width: 480px) {
+  body {
+    padding: 10px; /* Menos padding en el body */
+  }
+  .app-container {
+    padding: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .app-header h1 {
+    font-size: 1.75rem;
+  }
+  .app-main {
+    padding: 15px;
+  }
+
+  .input-tarea-form {
+    flex-direction: column; /* Input y botón uno debajo del otro */
+  }
+  .input-tarea-boton {
+    width: 100%; /* Botón ocupa todo el ancho */
+  }
+
+  .tarea-item {
+    padding: 12px;
+  }
+
+  .tarea-modo-vista {
+    flex-direction: column; /* Contenido y acciones en líneas separadas */
+    align-items: flex-start; /* Alinear todo a la izquierda */
+    gap: 12px;
+  }
+  .tarea-contenido {
+    width: 100%; /* Ocupa todo el ancho para que el texto no se corte pronto */
+  }
+  .tarea-acciones-vista {
+    width: 100%; /* Ocupar todo el ancho */
+    justify-content: flex-start; /* Botones a la izquierda */
+  }
+  .boton-accion {
+    /* Opcional: hacer que los botones ocupen más espacio */
+    /* flex-grow: 1; */
+    /* text-align: center; */
+  }
+
+  .tarea-modo-edicion {
+    /* Ya es flex-direction column por defecto, se ajusta bien */
+  }
+  .tarea-botones-edicion {
+    flex-direction: column; /* Botones de guardar/cancelar en columna */
+    width: 100%;
+  }
+  .tarea-botones-edicion .boton-accion {
+    width: 100%; /* Botones ocupan todo el ancho */
+  }
+  .tarea-botones-edicion .boton-accion:not(:last-child) {
+    margin-bottom: 8px;
+  }
+
+  .app-footer {
+    font-size: 0.8rem;
+  }
+}
+
